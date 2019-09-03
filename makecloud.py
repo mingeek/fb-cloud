@@ -14,10 +14,31 @@ def create_json():
                 if file.endswith(".json"):
                     with open(curr_dir + '/' + file, "r") as message_file:
                         conversation = json.load(message_file)
+
+                        if os.path.exists(os.getcwd() + '/me.txt'):
+                            with open('me.txt', "r") as my_name:
+                                name = my_name.read()
+                        else:
+                            participants = conversation['participants']
+                            counter = 0
+                            print("- Setting Parameters -")
+                            for participant in participants:
+                                print("[%s] %s" % (counter, participant['name']))
+                                counter += 1
+                            index = input("Which of the participants are you?:\n")
+
+                            if index.isdigit() and int(index) > 0 and int(index) < len(participants):
+                                name = participants[int(index)]['name']
+                                with open('me.txt', "w") as my_name:
+                                    my_name.write(name)
+                            else:
+                                print("Invalid input")
+                                break
+
                         participants = conversation['participants']
                         messages = conversation['messages']
                         for message in messages:
-                            if message['sender_name'] == "Mingee" and 'content' in message:
+                            if message['sender_name'] == name and 'content' in message:
                                 text += (message['content'])
 
 
@@ -37,14 +58,4 @@ wordcloud = WordCloud(collocations=False).generate(text)
 # the matplotlib way:
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
-
-# lower max_font_size
-wordcloud = WordCloud(max_font_size=40).generate(text)
-plt.figure()
-plt.imshow(wordcloud, interpolation="bilinear")
-plt.axis("off")
 plt.show()
-
-# The pil way (if you don't have matplotlib)
-# image = wordcloud.to_image()
-# image.show()
