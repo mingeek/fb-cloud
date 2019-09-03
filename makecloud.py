@@ -15,7 +15,7 @@ def create_json():
                     with open(curr_dir + '/' + file, "r") as message_file:
                         conversation = json.load(message_file)
                         participants = conversation['participants']
-                        messages = conversation['messages']e
+                        messages = conversation['messages']
                         for message in messages:
                             if message['sender_name'] == "Mingee" and 'content' in message:
                                 text += (message['content'])
